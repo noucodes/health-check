@@ -5,7 +5,7 @@
 echo "🚀 Installing Health Monitor Service..."
 
 # Variables
-SERVICE_NAME="health-monitor"
+SERVICE_NAME="health-check"
 SERVICE_FILE="$SERVICE_NAME.service"
 INSTALL_DIR="/home/ubuntu/health-check"
 NODE_PATH="/usr/bin/node"
