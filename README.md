@@ -52,13 +52,13 @@ sudo ./install.sh
 
 3. Configure your services:
 ```bash
-sudo nano /opt/health-monitor/.env
-sudo nano /opt/health-monitor/integrations/config.json
+sudo nano /opt/health-check/.env
+sudo nano /opt/health-check/integrations/config.json
 ```
 
 4. Start the service:
 ```bash
-sudo systemctl start health-monitor
+sudo systemctl start health-check
 ```
 
 ## Configuration
@@ -96,25 +96,25 @@ Once installed as a systemd service:
 
 ```bash
 # Start service
-sudo systemctl start health-monitor
+sudo systemctl start health-check
 
 # Stop service
-sudo systemctl stop health-monitor
+sudo systemctl stop health-check
 
 # Restart service
-sudo systemctl restart health-monitor
+sudo systemctl restart health-check
 
 # Check status
-sudo systemctl status health-monitor
+sudo systemctl status health-check
 
 # View logs
-sudo journalctl -u health-monitor -f
+sudo journalctl -u health-check -f
 
 # Enable auto-start on boot
-sudo systemctl enable health-monitor
+sudo systemctl enable health-check
 
 # Disable auto-start
-sudo systemctl disable health-monitor
+sudo systemctl disable health-check
 ```
 
 ## Notification Behavior
