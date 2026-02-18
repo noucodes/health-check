@@ -11,11 +11,11 @@
     "dev": "nodemon src/server.js",
     "service:install": "chmod +x install.sh && sudo ./install.sh",
     "service:uninstall": "chmod +x uninstall.sh && sudo ./uninstall.sh",
-    "service:start": "sudo systemctl start health-monitor",
-    "service:stop": "sudo systemctl stop health-monitor",
-    "service:restart": "sudo systemctl restart health-monitor",
-    "service:status": "sudo systemctl status health-monitor",
-    "service:logs": "sudo journalctl -u health-monitor -f"
+    "service:start": "sudo systemctl start health-check",
+    "service:stop": "sudo systemctl stop health-check",
+    "service:restart": "sudo systemctl restart health-check",
+    "service:status": "sudo systemctl status health-check",
+    "service:logs": "sudo journalctl -u health-check -f"
   },
   "dependencies": {
     "axios": "^1.13.5",
