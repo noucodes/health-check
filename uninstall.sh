@@ -4,7 +4,7 @@
 
 echo "🗑️ Removing Health Monitor Service..."
 
-SERVICE_NAME="health-monitor"
+SERVICE_NAME="health-check"
 
 # Check if running as root
 if [ "$EUID" -ne 0 ]; then

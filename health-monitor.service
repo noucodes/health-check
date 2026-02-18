@@ -1,16 +1,16 @@
 [Unit]
-Description=Frameworks to Klaviyo Webhook Service
+Description=Health Check Service
 After=network.target
 
 [Service]
 Type=simple
 User=ubuntu
-WorkingDirectory=/home/ubuntu/frameworks-to-klaviyo-1
-ExecStart=/usr/bin/node /home/ubuntu/frameworks-to-klaviyo-1/server.js
+WorkingDirectory=/home/ubuntu/health-check
+ExecStart=/usr/bin/node /home/ubuntu/health-check/server.js
 Restart=always
 RestartSec=10
 Environment=NODE_ENV=production
-EnvironmentFile=/home/ubuntu/frameworks-to-klaviyo-1/.env
+EnvironmentFile=/home/ubuntu/health-check/.env
 
 [Install]
 WantedBy=multi-user.target
