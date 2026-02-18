@@ -1,0 +1,16 @@
+[Unit]
+Description=Frameworks to Klaviyo Webhook Service
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/frameworks-to-klaviyo-1
+ExecStart=/usr/bin/node /home/ubuntu/frameworks-to-klaviyo-1/server.js
+Restart=always
+RestartSec=10
+Environment=NODE_ENV=production
+EnvironmentFile=/home/ubuntu/frameworks-to-klaviyo-1/.env
+
+[Install]
+WantedBy=multi-user.target

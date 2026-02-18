@@ -1,0 +1,17 @@
+[
+  {
+    "name": "Orders API",
+    "url": "https://jin-swayable-imperishably.ngrok-free.dev/health",
+    "enabled": true
+  },
+  {
+    "name": "Database Service",
+    "url": "https://your-database-service.com/health",
+    "enabled": false
+  },
+  {
+    "name": "Payment Gateway",
+    "url": "https://your-payment-service.com/health",
+    "enabled": false
+  }
+]
