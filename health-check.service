@@ -6,7 +6,7 @@ After=network.target
 Type=simple
 User=ubuntu
 WorkingDirectory=/home/ubuntu/health-check
-ExecStart=/usr/bin/node /home/ubuntu/health-check/server.js
+ExecStart=/usr/bin/node /home/ubuntu/health-check/src/server.js
 Restart=always
 RestartSec=10
 Environment=NODE_ENV=production
