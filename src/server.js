@@ -26,10 +26,8 @@ try {
   services = [];
 }
 
-// Health monitoring state for each service
 const healthStatus = {};
 
-// Initialize health status for all services
 services.forEach(service => {
   healthStatus[service.name] = {
     isHealthy: true,
@@ -37,7 +35,6 @@ services.forEach(service => {
   };
 });
 
-// Health endpoint
 app.get('/health', (req, res) => {
   res.status(200).json({
     status: 'healthy',
@@ -46,7 +43,6 @@ app.get('/health', (req, res) => {
   });
 });
 
-// Discord webhook function
 async function sendDiscordMessage(message, isError = false) {
   try {
     if (DISCORD_WEBHOOK_URL === 'YOUR_DISCORD_WEBHOOK_URL_HERE') {
@@ -76,7 +72,6 @@ async function sendDiscordMessage(message, isError = false) {
   }
 }
 
-// Health check function for all services
 async function performHealthCheck() {
   console.log('Checking health for all services...');
   
@@ -122,7 +117,6 @@ async function performHealthCheck() {
   }
 }
 
-// Send healthy status every 4 hours
 async function sendHealthyStatus() {
   const healthyServices = services.filter(service => healthStatus[service.name].isHealthy);
   
@@ -151,7 +145,6 @@ app.listen(PORT, () => {
   sendDiscordMessage('🚀 Health monitoring service started successfully!');
 });
 
-// Graceful shutdown
 process.on('SIGTERM', async () => {
   console.log('Received SIGTERM, shutting down gracefully...');
   await sendDiscordMessage('🛑 Health monitoring service is shutting down...');
