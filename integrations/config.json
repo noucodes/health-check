@@ -5,9 +5,9 @@
     "enabled": true
   },
   {
-    "name": "Database Service",
-    "url": "https://your-database-service.com/health",
-    "enabled": false
+    "name": "Frameworks to Klaviyo API",
+    "url": "https://june-gaited-fernande.ngrok-free.dev/health",
+    "enabled": true
   },
   {
     "name": "Payment Gateway",
