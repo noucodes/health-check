@@ -7,7 +7,7 @@
   {
     "name": "Frameworks to Klaviyo API",
     "url": "https://june-gaited-fernande.ngrok-free.dev/health",
-    "enabled": true
+    "enabled": false
   },
   {
     "name": "Payment Gateway",
