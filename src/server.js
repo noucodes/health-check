@@ -10,8 +10,9 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Configuration - Replace with your actual Discord webhook URL
+// Configuration
 const DISCORD_WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL || 'YOUR_DISCORD_WEBHOOK_URL_HERE';
+const TEAMS_WEBHOOK_URL = process.env.TEAMS_WEBHOOK_URL || 'YOUR_TEAMS_WEBHOOK_URL_HERE';
 
 // Load services configuration
 let services = [];
@@ -51,7 +52,7 @@ async function sendDiscordMessage(message, isError = false) {
     }
 
     const payload = {
-      username: 'Health Monitor',
+      username: process.env.INTEGRATION_NAME || 'Health Monitor',
       embeds: isError ? [{
         color: 0xFF0000,
         title: '❌ Health Check Failed',
@@ -72,6 +73,68 @@ async function sendDiscordMessage(message, isError = false) {
   }
 }
 
+
+async function sendTeamsMessage(message, isError = false) {
+  try {
+    if (TEAMS_WEBHOOK_URL === 'YOUR_TEAMS_WEBHOOK_URL_HERE') {
+      console.log('Teams webhook URL not configured. Message:', message);
+      return;
+    }
+
+    const payload = {
+      type: 'message',
+      attachments: [
+        {
+          contentType: 'application/vnd.microsoft.card.adaptive',
+          content: {
+            $schema: 'http://adaptivecards.io/schemas/adaptive-card.json',
+            type: 'AdaptiveCard',
+            version: '1.4',
+            body: [
+              {
+                type: 'TextBlock',
+                text: isError ? '❌ Health Check Failed' : '✅ Health Check Status',
+                weight: 'Bolder',
+                size: 'Medium',
+                color: isError ? 'Attention' : 'Good'
+              },
+              {
+                type: 'TextBlock',
+                text: message,
+                wrap: true,
+                color: 'Default'
+              },
+              {
+                type: 'TextBlock',
+                text: `🕐 ${new Date().toLocaleString('en-US', {
+                  dateStyle: 'medium',
+                  timeStyle: 'short',
+                  timeZone: 'Australia/Sydney'
+                })}`,
+                size: 'Small',
+                isSubtle: true
+              }
+            ]
+          }
+        }
+      ]
+    };
+
+    await axios.post(TEAMS_WEBHOOK_URL, payload);
+    console.log('Teams notification sent successfully');
+  } catch (error) {
+    console.error('Failed to send Teams notification:', error.message);
+  }
+}
+
+// Helper to notify all channels at once
+async function notify(message, isError = false) {
+  await Promise.all([
+    sendDiscordMessage(message, isError),
+    sendTeamsMessage(message, isError)
+  ]);
+}
+
 async function performHealthCheck() {
   console.log('Checking health for all services...');
   
@@ -90,7 +153,7 @@ async function performHealthCheck() {
           // Service recovered from unhealthy state
           status.isHealthy = true;
           status.consecutiveFailures = 0;
-          await sendDiscordMessage(`🎉 ${service.name} has recovered and is now healthy!`);
+          await notify(`🎉 ${service.name} has recovered and is now healthy!`);
         }
         console.log(`✅ ${service.name} health check passed:`, new Date().toISOString());
       }
@@ -102,13 +165,13 @@ async function performHealthCheck() {
       if (status.isHealthy || status.consecutiveFailures === 1) {
         // First failure or transition from healthy to unhealthy
         status.isHealthy = false;
-        await sendDiscordMessage(
+        await notify(
           `⚠️ ${service.name} health check failed!\nURL: ${service.url}\nConsecutive failures: ${status.consecutiveFailures}\nError: ${error.message}`,
           true
         );
       } else if (status.consecutiveFailures % 5 === 0) {
         // Every 5th consecutive failure, send an update
-        await sendDiscordMessage(
+        await notify(
           `⚠️ ${service.name} still unhealthy! Consecutive failures: ${status.consecutiveFailures}`,
           true
         );
@@ -124,7 +187,7 @@ async function sendHealthyStatus() {
     const serviceNames = healthyServices.map(s => s.name).join(', ');
     const uptime = `${Math.floor(process.uptime() / 3600)}h ${Math.floor((process.uptime() % 3600) / 60)}m`;
     
-    await sendDiscordMessage(
+    await notify(
       `✅ All monitored services are healthy!\nServices: ${serviceNames}\nMonitor uptime: ${uptime}`
     );
   }
@@ -141,17 +204,17 @@ app.listen(PORT, () => {
   console.log(`Health endpoint available at: http://localhost:${PORT}/health`);
   
   // Send startup notification
-  sendDiscordMessage('🚀 Health monitoring service started successfully!');
+  notify('🚀 Health monitoring service started successfully!');
 });
 
 process.on('SIGTERM', async () => {
   console.log('Received SIGTERM, shutting down gracefully...');
-  await sendDiscordMessage('🛑 Health monitoring service is shutting down...');
+  await notify('🛑 Health monitoring service is shutting down...');
   process.exit(0);
 });
 
 process.on('SIGINT', async () => {
   console.log('Received SIGINT, shutting down gracefully...');
-  await sendDiscordMessage('🛑 Health monitoring service is shutting down...');
+  await notify('🛑 Health monitoring service is shutting down...');
   process.exit(0);
 });
